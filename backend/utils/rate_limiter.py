@@ -5,6 +5,13 @@ from flask import jsonify, request, g
 import threading
 from collections import defaultdict, deque
 
+# Import Flask JWT extensions at module level
+try:
+    from flask_jwt_extended import get_jwt_identity, jwt_required
+    JWT_AVAILABLE = True
+except ImportError:
+    JWT_AVAILABLE = False
+
 class RateLimiter:
     """Simple in-memory rate limiter"""
     
@@ -46,8 +53,7 @@ def ratelimit(limit: int, window: int = 60, per: str = 'ip'):
         @wraps(f)
         def decorated_function(*args, **kwargs):
             # Determine client identifier
-            if per == 'user':
-                from flask_jwt_extended import get_jwt_identity, jwt_required
+            if per == 'user' and JWT_AVAILABLE:
                 try:
                     client_id = f"user_{get_jwt_identity()}"
                 except:

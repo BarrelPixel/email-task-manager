@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import { User, Task, Email, TaskStats, EmailStats } from '../types';
 import { config } from '../config';
 
@@ -18,12 +18,12 @@ class ApiService {
 
     // Add request interceptor to include auth token
     this.api.interceptors.request.use(
-      (config) => {
+      (axiosConfig) => {
         const token = localStorage.getItem(config.auth.tokenKey);
         if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
+          axiosConfig.headers.Authorization = `Bearer ${token}`;
         }
-        return config;
+        return axiosConfig;
       },
       (error) => {
         return Promise.reject(error);

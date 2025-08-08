@@ -1,4 +1,4 @@
-from run import db
+from extensions import db
 from utils.encryption import token_encryption
 from datetime import datetime
 from sqlalchemy.ext.hybrid import hybrid_property

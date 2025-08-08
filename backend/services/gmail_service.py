@@ -7,6 +7,7 @@ import email
 from datetime import datetime, timedelta
 import os
 import logging
+from extensions import db
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +35,6 @@ class GmailService:
                 self.user.gmail_access_token = credentials.token
                 self.user.gmail_token_expiry = credentials.expiry
                 self.user.updated_at = datetime.utcnow()
-                from run import db
                 db.session.commit()
             
             return build('gmail', 'v1', credentials=credentials)

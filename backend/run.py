@@ -3,13 +3,13 @@
 Main entry point for the Email Task Manager backend application.
 """
 from flask import Flask, jsonify
-from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import datetime, timedelta
 import os
 from dotenv import load_dotenv
 import logging
+from extensions import db, jwt
 
 # Load environment variables
 load_dotenv()
@@ -17,10 +17,6 @@ load_dotenv()
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-# Initialize extensions
-db = SQLAlchemy()
-jwt = JWTManager()
 
 def create_app():
     """Application factory function"""

@@ -7,7 +7,8 @@ import tempfile
 from datetime import datetime, timedelta
 from unittest.mock import Mock, patch
 
-from run import create_app, db
+from extensions import db
+from run import create_app
 from models.user import User
 from models.task import Task
 from models.email import Email

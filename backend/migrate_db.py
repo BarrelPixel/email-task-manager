@@ -2,7 +2,8 @@
 """
 Database migration script to add indexes for better performance
 """
-from run import app, db
+from extensions import db
+from run import create_app
 from sqlalchemy import text
 
 def create_indexes():
@@ -40,7 +41,7 @@ def create_indexes():
         "CREATE INDEX IF NOT EXISTS idx_email_user_processed ON emails(user_id, processed);",
     ]
     
-    with app.app_context():
+    with create_app().app_context():
         for index_sql in indexes_to_create:
             try:
                 db.session.execute(text(index_sql))

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { User, Task, TaskStats } from '../types';
+import React, { useState, useEffect, useCallback } from 'react';
+import { User, Task, TaskStats as TaskStatsType } from '../types';
 import apiService from '../services/api';
 import TaskList from '../components/TaskList';
-import TaskStats from '../components/TaskStats';
+import TaskStatsComponent from '../components/TaskStats';
 import Header from '../components/Header';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -13,7 +13,7 @@ interface DashboardProps {
 
 const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [stats, setStats] = useState<TaskStats | null>(null);
+  const [stats, setStats] = useState<TaskStatsType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessingEmails, setIsProcessingEmails] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -25,12 +25,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
     sort_order: 'desc'
   });
 
-  useEffect(() => {
-    loadTasks();
-    loadStats();
-  }, [filters]);
-
-  const loadTasks = async () => {
+  const loadTasks = useCallback(async () => {
     try {
       const response = await apiService.getTasks(filters);
       setTasks(response.tasks);
@@ -40,16 +35,21 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [filters]);
 
-  const loadStats = async () => {
+  const loadStats = useCallback(async () => {
     try {
       const statsData = await apiService.getTaskStats();
       setStats(statsData);
     } catch (error) {
       console.error('Failed to load stats:', error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadTasks();
+    loadStats();
+  }, [loadTasks, loadStats]);
 
   const handleProcessEmails = async () => {
     setIsProcessingEmails(true);
@@ -115,7 +115,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
         {/* Stats Section */}
         {stats && (
           <div className="mb-8">
-            <TaskStats stats={stats} />
+            <TaskStatsComponent stats={stats} />
           </div>
         )}
 

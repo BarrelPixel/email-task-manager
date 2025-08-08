@@ -7,7 +7,7 @@ from googleapiclient.discovery import build
 import os
 import json
 from datetime import datetime, timedelta
-from run import db
+from extensions import db
 from models.user import User
 from utils import sanitize_text, validate_email
 

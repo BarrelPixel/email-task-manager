@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import base64
 import email
 import os
-from run import db
+from extensions import db
 from models.email import Email
 from models.task import Task
 from models.user import User
